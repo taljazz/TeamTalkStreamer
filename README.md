@@ -9,10 +9,11 @@
 - Pushes the captured PCM into the channel via the TeamTalk SDK so other members hear exactly what you are playing.
 - Handles the full lifecycle in one click — connect, log in, join channel, begin streaming — and again in one click to stop.
 - Optionally excludes one running app (typically your screen reader) from the captured mix, so its speech stays on your side only. Uses Windows 10 2004+'s Process Loopback API under the hood.
+- Exposes a live **Master volume** slider (0–100 %) so the stream's output level into the channel can be tuned on the fly without alt-tabbing to Windows' volume mixer.
 
 ## Status
 
-- **Version 1 (current):** Windows streaming of the default playback device. Includes a credentials dialog with a built-in channel browser, an excluded-apps picker for screen-reader-style process exclusion, adjustable feedback-tone volume via `=` / `-`, a single start/stop toggle button, F1 user-guide, and fully clean process shutdown. Ready for day-to-day use.
+- **Version 1 (current):** Windows streaming of the default playback device. Includes a credentials dialog with a built-in channel browser, an excluded-apps picker for screen-reader-style process exclusion, a live master-volume slider, adjustable feedback-tone volume via `=` / `-`, a single start/stop toggle button, F1 user-guide, and fully clean process shutdown. Ready for day-to-day use.
 - **Version 2 (deferred):** LAN companion apps for iOS (SwiftUI + ReplayKit) and Android (Kotlin + MediaProjection) so your phone can stream its audio into the same channel through this app. The server-side infrastructure is written and tested; the mobile clients require a Mac for the iOS toolchain and are paused until that is available.
 
 ## Accessibility
@@ -50,6 +51,7 @@ Press **F1** at any time to open the full user guide.
 | Start / Stop streaming | One-click toggle — runs the full connect → join → stream flow, or the reverse. |
 | Server settings… | Opens the credentials dialog (host, user, channel). |
 | Excluded apps… | Opens the per-app exclusion picker (hide one running app's audio from the capture). |
+| Master volume slider | Live 0–100 % volume applied to the captured audio before it reaches the channel. |
 | F1 | Opens `guide.html` in your default browser. |
 | `=` or numpad `+` | Increases the feedback-tone volume by 10 %. |
 | `-` or numpad `-` | Decreases the feedback-tone volume by 10 %. |

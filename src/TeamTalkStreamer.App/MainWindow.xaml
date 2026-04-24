@@ -46,6 +46,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -89,12 +90,60 @@
                     automation:AutomationProperties.HelpText="Pick an app (typically your screen reader) whose audio should be removed from the loopback capture before streaming" />
         </StackPanel>
 
-        <!-- Row 2: Sources list — power-user view. Shows every source
+        <!-- Row 2: Master gain — live multiplier applied to the captured
+             mix before it reaches the TeamTalk sink. Changes take effect
+             immediately; writes to settings.json are debounced 500 ms so
+             a slider drag doesn't thrash the file. -->
+        <GroupBox Grid.Row="2" Header="Stream volume" Margin="0,0,0,12">
+            <Grid Margin="8,6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Text="Master gain:"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,0" />
+
+                <!-- Slider is bound in INTEGER PERCENT (0..100) so screen
+                     readers announce "80", "90", "100" as the user
+                     arrows through rather than "0.8", "0.9", "1.0".
+                     Attenuate-only range: 100 passes audio through
+                     unchanged, anything below quiets the outgoing
+                     stream. The float gain factor is computed at the
+                     VM's persistence / sink boundaries only. -->
+                <Slider Grid.Column="1"
+                        Value="{Binding MasterGainPercent, Mode=TwoWay}"
+                        Minimum="0" Maximum="100"
+                        SmallChange="10"
+                        LargeChange="50"
+                        TickFrequency="25"
+                        TickPlacement="BottomRight"
+                        IsSnapToTickEnabled="False"
+                        IsMoveToPointEnabled="True"
+                        VerticalAlignment="Center"
+                        automation:AutomationProperties.Name="Master volume, in percent"
+                        automation:AutomationProperties.HelpText="Adjusts the volume of the captured audio sent to the TeamTalk channel. 100 is full volume (pass-through), 0 is silent. Arrow keys adjust by 10 percent; Page Up and Page Down by 50 percent; Home and End jump to 0 and 100. Changes apply immediately and are saved automatically." />
+
+                <TextBlock Grid.Column="2"
+                           Text="{Binding MasterGainPercentText, FallbackValue='100 %'}"
+                           VerticalAlignment="Center"
+                           MinWidth="60"
+                           TextAlignment="Right"
+                           Margin="10,0,0,0"
+                           automation:AutomationProperties.Name="Current master gain percentage"
+                           automation:AutomationProperties.LiveSetting="Polite" />
+            </Grid>
+        </GroupBox>
+
+        <!-- Row 3: Sources list — power-user view. Shows every source
              currently attached to the router (just loopback in v1;
              mobile sources will reappear here in v2 once the iOS
              companion app is buildable). Add/Remove let advanced
              users manage sources independently of the streaming flow. -->
-        <GroupBox Grid.Row="2"
+        <GroupBox Grid.Row="3"
                   Header="Audio sources (advanced)"
                   Margin="0,0,0,12">
             <Grid>

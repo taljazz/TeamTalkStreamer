@@ -40,6 +40,9 @@ namespace TeamTalkStreamer.App.ViewModels;
 ///   <item><description><c>MainViewModel.Feedback.cs</c> — feedback-
 ///     tone volume control bound to the <c>=</c> / <c>-</c> keys,
 ///     including the startup load of the saved volume.</description></item>
+///   <item><description><c>MainViewModel.MasterGain.cs</c> — master
+///     stream-gain slider value, live sink update, and debounced
+///     save to settings.</description></item>
 /// </list>
 ///
 /// Note: the mobile-bridge UI (and its <c>MainViewModel.MobileBridge.cs</c>
@@ -126,10 +129,11 @@ public sealed partial class MainViewModel : INotifyPropertyChanged
 
         Sources = new ObservableCollection<IAudioSource>();
 
-        // Restore the user's saved feedback-tone volume before any
-        // tone plays. Lives in the Feedback partial so the volume
-        // concern stays wholly in one file.
+        // Restore user-saved audio preferences before any tone plays
+        // or any streaming starts. Each method lives in its own partial
+        // so the respective concerns stay wholly in one file each.
         ApplySavedFeedbackVolume();
+        ApplySavedMasterGain();
     }
 
     #endregion

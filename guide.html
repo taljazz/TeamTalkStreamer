@@ -162,6 +162,16 @@
     <strong>Tip.</strong> Nothing stops you from playing audio <em>after</em> pressing Start — the loopback captures whatever is playing on your default device at any moment. You can start streaming first, then start your music or game.
 </div>
 
+<h3>Adjusting stream volume on the fly</h3>
+
+<p>The main window has a <strong>Stream volume</strong> panel with a <strong>Master volume</strong> slider. It scales every captured sample by the slider value before the audio is handed to TeamTalk — <em>after</em> the loopback capture, but <em>before</em> the sink. So it affects only what listeners hear on the other end, not what you hear locally through your own speakers.</p>
+
+<ul>
+    <li><strong>Range.</strong> 0 % (silent) to 100 % (full volume, pass-through). The default is 100 %.</li>
+    <li><strong>Keyboard.</strong> Tab into the slider, then arrow keys adjust by 10 %, Page Up / Page Down by 50 %. Home / End jump to 0 / 100.</li>
+    <li><strong>Live.</strong> Changes take effect instantly — no need to stop and restart streaming. The saved value persists across restarts; the actual write to the settings file is debounced 500 ms after you stop moving the slider so rapid drags don't thrash the disk.</li>
+</ul>
+
 <h2>5. Keyboard Reference</h2>
 
 <table>
@@ -169,6 +179,9 @@
     <tr><td>F1</td><td>Open this user guide in your default browser.</td></tr>
     <tr><td>=  or numpad +</td><td>Increase feedback-tone volume by 10 %.</td></tr>
     <tr><td>-  or numpad -</td><td>Decrease feedback-tone volume by 10 %.</td></tr>
+    <tr><td>Arrow keys (on Master volume slider)</td><td>Adjust stream volume by 10 %.</td></tr>
+    <tr><td>Page Up / Page Down (on slider)</td><td>Adjust stream volume by 50 %.</td></tr>
+    <tr><td>Home / End (on slider)</td><td>Jump to 0 % / 100 % stream volume.</td></tr>
     <tr><td>Enter</td><td>Default action — Start / Stop streaming on the main window, Save on dialogs.</td></tr>
     <tr><td>Escape</td><td>Cancel the current dialog (Server settings, Excluded apps).</td></tr>
     <tr><td>Tab / Shift+Tab</td><td>Move focus between controls.</td></tr>
