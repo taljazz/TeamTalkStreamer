@@ -1,0 +1,33 @@
+<!--
+  TeamTalkStreamer.MobileBridge
+  =============================
+  Hosts a Kestrel-based WebSocket server that mobile companion apps
+  (iOS/Android, v2) connect to in order to stream audio into the
+  pipeline. Also advertises the server over mDNS for zero-config
+  discovery, and decodes Opus frames back to PCM for the router.
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\TeamTalkStreamer.Core\TeamTalkStreamer.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- ASP.NET Core shared framework — brings in Kestrel + WebSockets
+         without adding individual packages. Valid on net10.0-windows. -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- mDNS / DNS-SD. Exact package name & version may need adjustment
+         at first restore — Makaretu.Dns is the most common managed mDNS
+         library; if its API moves we can swap to Zeroconf.NET. -->
+    <PackageReference Include="Makaretu.Dns" Version="2.0.1" />
+
+    <!-- Concentus — pure-managed Opus codec. Decodes the Opus-encoded
+         frames sent by mobile clients back to 48 kHz mono PCM. -->
+    <PackageReference Include="Concentus" Version="2.2.2" />
+    <PackageReference Include="Makaretu.Dns.Multicast" Version="0.27.0" />
+  </ItemGroup>
+
+</Project>

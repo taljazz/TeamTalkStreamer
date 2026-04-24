@@ -1,0 +1,69 @@
+<!--
+  TeamTalkStreamer.TeamTalk
+  =========================
+  Thin wrapper over the BearWare TeamTalk5.NET SDK. Exposes a
+  TeamTalkClient (partial class split by concern) and a TeamTalkSink
+  that implements IAudioSink so the router can forward PCM into a
+  TeamTalk channel.
+
+  SDK distribution note
+  =====================
+  BearWare ships the .NET wrapper as SOURCE (not a pre-built DLL). The
+  two .cs files ship inside the SDK zip and must be compiled into this
+  project. Their namespace is `BearWare`. The native TeamTalk5.dll is
+  copied to the App's output folder so P/Invokes can find it.
+
+  Licensing
+  =========
+  Using the SDK files requires a License Key from BearWare.dk. Source
+  download is a 30-day trial. Buy a license at bearware.dk before
+  distributing anything built with it.
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- TeamTalk.cs uses System.Windows.Forms + System.Drawing types.
+         Enabling WinForms here pulls the Microsoft.WindowsDesktop.App
+         framework reference, which includes both. -->
+    <UseWindowsForms>true</UseWindowsForms>
+
+    <!-- Compile-time symbol that enables the SDK-touching bodies inside
+         TeamTalkClient's #if TT_SDK_REFERENCED guards. -->
+    <DefineConstants>$(DefineConstants);TT_SDK_REFERENCED</DefineConstants>
+
+    <!-- BearWare's TeamTalk.cs was written before C# nullable reference
+         types existed, so it emits dozens of CS8601/CS8603/etc warnings
+         under our solution-wide `WarningsAsErrors=Nullable` rule. We
+         disable nullable for this whole project and opt our own files
+         back in with `#nullable enable` at the top of each. -->
+    <Nullable>disable</Nullable>
+    <WarningsAsErrors></WarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TeamTalkStreamer.Core\TeamTalkStreamer.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Vendored BearWare wrapper source. Linked (not copied) so a
+         future SDK update just replaces the files in libs/teamtalk/. -->
+    <Compile Include="$(MSBuildThisFileDirectory)..\..\libs\teamtalk\TeamTalk.cs"
+             Link="BearWare\TeamTalk.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)..\..\libs\teamtalk\TeamTalkInterop.cs"
+             Link="BearWare\TeamTalkInterop.cs" />
+
+    <!-- Native DLL — copied to the App's output folder at build so the
+         managed P/Invokes resolve at runtime.
+         * CopyToOutputDirectory handles Debug / Release builds.
+         * CopyToPublishDirectory is required for `dotnet publish`
+           (especially with PublishSingleFile=true) because None items
+           in a referenced project don't automatically flow into the
+           consumer's publish directory otherwise. -->
+    <None Include="$(MSBuildThisFileDirectory)..\..\libs\teamtalk\TeamTalk5.dll"
+          Link="TeamTalk5.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

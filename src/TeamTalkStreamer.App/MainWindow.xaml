@@ -1,0 +1,132 @@
+<!--
+  MainWindow.xaml
+  ===============
+  Primary window. Kept deliberately plain so every control is
+  keyboard-reachable and screen-reader-friendly out of the box.
+  AutomationProperties on every interactive element give explicit,
+  human-readable labels.
+
+  Layout (top to bottom):
+    1. Session status (live region — updates announced via Tolk too)
+    2. Source list + Add/Remove buttons
+    3. TeamTalk connection controls
+    4. MobileBridge info (port, PIN, connected devices)
+-->
+<Window x:Class="TeamTalkStreamer.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TeamTalkStreamer.App"
+        xmlns:automation="clr-namespace:System.Windows.Automation;assembly=PresentationCore"
+        mc:Ignorable="d"
+        Title="TeamTalk Streamer"
+        Height="600" Width="800"
+        WindowStartupLocation="CenterScreen"
+        automation:AutomationProperties.Name="TeamTalk Streamer main window">
+
+    <!-- Global keyboard shortcuts.
+           * F1            — open the bundled guide.html in the
+                             user's default browser.
+           * = / numpad +  — nudge the feedback-tone volume up by 10 %.
+           * - / numpad -  — nudge the feedback-tone volume down by 10 %.
+         OemPlus / OemMinus are the physical = / - keys on the
+         alphanumeric row (no Shift required). Add / Subtract are
+         their numpad equivalents, included as a convenience for
+         keyboards with a dedicated numpad. -->
+    <Window.InputBindings>
+        <KeyBinding Key="F1"       Command="{Binding OpenGuideCommand}" />
+        <KeyBinding Key="OemPlus"  Command="{Binding IncreaseFeedbackVolumeCommand}" />
+        <KeyBinding Key="Add"      Command="{Binding IncreaseFeedbackVolumeCommand}" />
+        <KeyBinding Key="OemMinus" Command="{Binding DecreaseFeedbackVolumeCommand}" />
+        <KeyBinding Key="Subtract" Command="{Binding DecreaseFeedbackVolumeCommand}" />
+    </Window.InputBindings>
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Row 0: Session status -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <TextBlock Text="Session status"
+                       FontWeight="Bold"
+                       automation:AutomationProperties.HeadingLevel="Level1" />
+            <TextBlock Name="SessionStatusText"
+                       Text="{Binding SessionStatusText, FallbackValue='Idle'}"
+                       automation:AutomationProperties.Name="Session status"
+                       automation:AutomationProperties.LiveSetting="Polite" />
+        </StackPanel>
+
+        <!-- Row 1: Primary action row — one toggle button that flips
+             between "Start streaming" and "Stop streaming" based on
+             the current session state, plus the server-settings
+             launcher. The button's Content and AutomationProperties
+             are both bound to the VM so the screen reader announces
+             the correct action whenever focus lands on it. -->
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    Margin="0,0,0,12">
+            <Button Content="{Binding StreamToggleLabel}"
+                    Width="200" Height="38"
+                    Margin="0,0,8,0"
+                    IsDefault="True"
+                    Command="{Binding ToggleStreamingCommand}"
+                    automation:AutomationProperties.Name="{Binding StreamToggleLabel}"
+                    automation:AutomationProperties.HelpText="Toggles streaming. When offline, starts the full go-live flow (connect, join channel, stream the default playback device). When streaming or connecting, stops and disconnects." />
+            <Button Content="Server settings…"
+                    Width="160" Height="38"
+                    Margin="0,0,8,0"
+                    Command="{Binding OpenServerSettingsCommand}"
+                    automation:AutomationProperties.Name="Open server settings dialog"
+                    automation:AutomationProperties.HelpText="Configure the TeamTalk server address, credentials, and target channel" />
+            <Button Content="Excluded apps…"
+                    Width="160" Height="38"
+                    Command="{Binding OpenExcludedAppsCommand}"
+                    automation:AutomationProperties.Name="Open excluded apps dialog"
+                    automation:AutomationProperties.HelpText="Pick an app (typically your screen reader) whose audio should be removed from the loopback capture before streaming" />
+        </StackPanel>
+
+        <!-- Row 2: Sources list — power-user view. Shows every source
+             currently attached to the router (just loopback in v1;
+             mobile sources will reappear here in v2 once the iOS
+             companion app is buildable). Add/Remove let advanced
+             users manage sources independently of the streaming flow. -->
+        <GroupBox Grid.Row="2"
+                  Header="Audio sources (advanced)"
+                  Margin="0,0,0,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <ListBox Grid.Column="0"
+                         Name="SourcesList"
+                         ItemsSource="{Binding Sources}"
+                         DisplayMemberPath="DisplayName"
+                         MinHeight="80"
+                         automation:AutomationProperties.Name="Currently attached audio sources" />
+
+                <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                    <Button Content="Add system audio"
+                            Margin="0,0,0,8"
+                            Command="{Binding AddLoopbackSourceCommand}"
+                            automation:AutomationProperties.Name="Manually attach default-device loopback source" />
+                    <Button Content="Remove selected"
+                            Command="{Binding RemoveSelectedSourceCommand}"
+                            CommandParameter="{Binding SelectedItem, ElementName=SourcesList}"
+                            automation:AutomationProperties.Name="Remove selected source from pipeline" />
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+
+        <!-- Row 3 (Mobile bridge) was removed while the iOS companion
+             toolchain is unavailable. The server code is retained in
+             the TeamTalkStreamer.MobileBridge project for easy
+             restoration; re-add this section when the iOS app ships. -->
+
+    </Grid>
+</Window>

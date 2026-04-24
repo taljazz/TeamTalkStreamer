@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TeamTalkStreamer.Accessibility/TeamTalkStreamer.Accessibility.csproj" />
+    <Project Path="src/TeamTalkStreamer.App/TeamTalkStreamer.App.csproj" />
+    <Project Path="src/TeamTalkStreamer.Audio.Windows/TeamTalkStreamer.Audio.Windows.csproj" />
+    <Project Path="src/TeamTalkStreamer.Core/TeamTalkStreamer.Core.csproj" />
+    <Project Path="src/TeamTalkStreamer.MobileBridge/TeamTalkStreamer.MobileBridge.csproj" />
+    <Project Path="src/TeamTalkStreamer.Persistence/TeamTalkStreamer.Persistence.csproj" />
+    <Project Path="src/TeamTalkStreamer.TeamTalk/TeamTalkStreamer.TeamTalk.csproj" />
+  </Folder>
+</Solution>

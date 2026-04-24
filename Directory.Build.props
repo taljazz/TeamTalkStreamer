@@ -1,0 +1,56 @@
+<!--
+  Directory.Build.props
+  ======================
+  MSBuild loads this file before every project .csproj in or below this
+  directory, so properties declared here apply to the entire solution.
+  Centralizing them keeps individual .csproj files short and prevents
+  per-project drift in things like target framework or nullable settings.
+
+  Projects may still override any property by declaring it in their own
+  .csproj — but the default is to inherit everything from here.
+-->
+<Project>
+
+  <PropertyGroup>
+
+    <!-- Target Framework
+         ================
+         .NET 10 on Windows. Pinning the "-windows" TFM for every project
+         (even pure-logic ones) keeps the dependency graph flat: WPF,
+         WASAPI loopback, and Tolk P/Invoke all require the Windows TFM
+         anyway, and splitting TFMs complicates build output layout
+         without buying us cross-platform reach we don't need. -->
+    <TargetFramework>net10.0-windows</TargetFramework>
+
+    <!-- Language settings
+         =================
+         "latest" tracks whatever C# version ships with the current SDK.
+         Nullable reference types are enabled everywhere; implicit usings
+         pull in the common System.* namespaces. -->
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- Warnings
+         ========
+         Only nullable warnings are escalated to errors — they catch real
+         bugs and are easy to fix. Other warnings stay as warnings so a
+         fresh SDK upgrade doesn't brick the build over new rules. -->
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
+
+    <!-- Assembly metadata
+         =================
+         Values below feed AssemblyInfo generation and the WPF app manifest. -->
+    <Company>Thomas</Company>
+    <Product>TeamTalk Streamer</Product>
+    <Copyright>(c) 2026 Thomas. Licensed under GPL-3.0-or-later (matches TeamTalk SDK license).</Copyright>
+
+    <!-- Deterministic builds
+         ====================
+         Reproducible output hashes make it easier to verify what the user
+         is actually running when debugging installed binaries. -->
+    <Deterministic>true</Deterministic>
+
+  </PropertyGroup>
+
+</Project>

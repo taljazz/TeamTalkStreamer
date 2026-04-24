@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeamTalk Streamer User Guide</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 960px;
+        }
+        h1, h2, h3 { color: #333; }
+        h2 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-top: 40px;
+        }
+        h3 { margin-top: 25px; }
+        ul, ol { margin-left: 20px; }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        pre code {
+            display: block;
+            padding: 10px;
+            overflow-x: auto;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 15px 0;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th { background-color: #f0f0f0; }
+        .note {
+            background: #fff8e1;
+            border-left: 4px solid #f1c40f;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        .warn {
+            background: #fdecea;
+            border-left: 4px solid #e74c3c;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>TeamTalk Streamer — User Guide</h1>
+
+<p>TeamTalk Streamer is an accessible Windows application that streams your PC's audio directly into a TeamTalk voice channel. It replaces the traditional "Virtual Audio Cable plus TeamTalk" workaround with a clean, screen-reader-first tool that handles the whole flow — connect, log in, join, stream — in a single click.</p>
+
+<p>This guide walks through setup, daily use, keyboard controls, accessibility features, and troubleshooting. Press <strong>F1</strong> at any time from inside the app to reopen this document.</p>
+
+<h2>1. Before You Begin</h2>
+
+<h3>What you need</h3>
+
+<ul>
+    <li><strong>Windows 10 or 11 (64-bit).</strong> The .NET 10 runtime is embedded in the executable — no separate install is required.</li>
+    <li><strong>A TeamTalk 5 server</strong> to connect to — either self-hosted or one you already have an account on.</li>
+    <li><strong>Your TeamTalk account details</strong> — host, nickname, username, password, and the channel you want to stream into.</li>
+    <li><strong>A TeamTalk SDK License Key</strong> from <a href="https://bearware.dk/">BearWare</a> if you plan to use the app beyond the SDK's 30-day trial.</li>
+</ul>
+
+<h3>First install</h3>
+
+<ol>
+    <li>Extract the distribution zip anywhere — your desktop, your documents folder, a USB stick. It doesn't matter where, as long as the three files stay together: <code>TeamTalkStreamer.exe</code>, <code>TeamTalk5.dll</code>, and <code>guide.html</code>.</li>
+    <li>Run <code>TeamTalkStreamer.exe</code>. You will see the main window — a session-status line at the top, a row of primary buttons, and an advanced sources list.</li>
+    <li>If a screen reader is running, TeamTalk Streamer will detect it automatically. Tolk supports NVDA, JAWS, Window-Eyes, System Access, ZoomText, Dolphin SuperNova, and the Windows SAPI fallback.</li>
+</ol>
+
+<div class="note">
+    <strong>Note on screen-reader output.</strong> If the app opens silently and you were expecting spoken announcements, the Tolk native DLLs may not be present alongside the executable. This is optional — the app still works without them — but if you want the spoken state-change feedback, download the Tolk DLLs from <a href="https://github.com/dkager/tolk/releases">the Tolk project</a> and drop them next to <code>TeamTalkStreamer.exe</code>.
+</div>
+
+<h2>2. Configuring Your Server</h2>
+
+<p>Before the first stream, tell TeamTalk Streamer which server to use.</p>
+
+<ol>
+    <li>Click <strong>Server settings…</strong>, or press Tab until focus lands on that button and press Enter.</li>
+    <li>Fill in the <strong>Server</strong> section:
+        <ul>
+            <li><strong>Host</strong> — the hostname or IP address of your TeamTalk server.</li>
+            <li><strong>TCP port</strong> and <strong>UDP port</strong> — usually <code>10333</code>, which is the default for most installs.</li>
+            <li><strong>Server password</strong> — leave blank unless the server itself is password-protected.</li>
+        </ul>
+    </li>
+    <li>Fill in the <strong>User</strong> section — nickname (shown to others in the channel), username, and password. Leave username and password blank for anonymous servers.</li>
+    <li>Pick a <strong>channel</strong> using the browser at the bottom of the dialog. Instructions for this are in the next section.</li>
+    <li>Press <strong>Save</strong>. Settings are persisted to <code>%APPDATA%\TeamTalkStreamer\settings.json</code>.</li>
+</ol>
+
+<h3>Browsing the channel list</h3>
+
+<p>The Server settings dialog has a <strong>Browse channels</strong> section that lets you pick a channel from a live list rather than typing its path. Once you have entered your host and credentials:</p>
+
+<ol>
+    <li>Click <strong>Probe server for channel list</strong>. The app briefly connects to the server, fetches every channel, and disconnects. A status line reports progress; Tolk speaks the final count.</li>
+    <li>Tab or arrow down into the channel list. Each entry reads as a friendly name — e.g. <em>"Music (under Lobby)"</em> or <em>"General chat — locked"</em> if the channel requires a password.</li>
+    <li>Select the channel you want. The selection appears in the <strong>Selected channel</strong> display at the top of the Channel section.</li>
+    <li>If the channel is password-protected, enter the channel password in the field below the display.</li>
+</ol>
+
+<p>You can still type a path manually into settings.json if you ever need a channel that the browser can't see, but for normal use the browser is the recommended workflow — it avoids path-typo errors and shows which channels require passwords up front.</p>
+
+<h2>3. Excluding an App from the Stream</h2>
+
+<p>By default TeamTalk Streamer captures your whole system audio mix — whatever your speakers are playing goes into the channel. That includes your screen reader's speech. If you'd rather keep your screen reader (or any other single app) on your side only, use the excluded-apps picker to skip its audio.</p>
+
+<h3>What it does</h3>
+
+<p>The excluded app's audio is subtracted from the loopback capture <em>before</em> it reaches the TeamTalk channel. You still hear the app normally on your own speakers or headphones — only the stream going out is affected. This is the same mechanism as Windows 11's per-app volume routing but scoped to our capture, so nothing about your day-to-day audio setup changes.</p>
+
+<h3>Picking an app to exclude</h3>
+
+<ol>
+    <li>Start the app you want to exclude (for example, let your screen reader speak something so it's currently producing audio).</li>
+    <li>Click <strong>Excluded apps…</strong> on the main window, or press Tab to it and press Enter.</li>
+    <li>The dialog lists every app currently making sound. If your target isn't there yet, click <strong>Refresh</strong> — the list only shows sessions that are active at enumeration time.</li>
+    <li>Select the app and press <strong>Save</strong>. Tolk confirms the choice aloud.</li>
+    <li>To remove the exclusion later, reopen the dialog and press <strong>Clear</strong>.</li>
+</ol>
+
+<p>The header of the dialog always shows the currently-saved exclusion, even if the app isn't running right now. That way you can see at a glance what's configured before picking something new.</p>
+
+<h3>Requirements and limits</h3>
+
+<ul>
+    <li><strong>Windows version.</strong> The exclusion feature uses Windows' Process Loopback API, introduced in Windows 10 version 2004 (May 2020). Older Windows can't exclude apps; TeamTalk Streamer will tell you if activation fails and fall back to the full-mix capture.</li>
+    <li><strong>One app at a time.</strong> The API accepts a single process tree per capture, so you can exclude one app plus all of its child processes — but not two unrelated apps simultaneously. The common case (one screen reader) is covered; multi-app exclusion would need a different architecture.</li>
+    <li><strong>Excluded app not running at stream time?</strong> TeamTalk Streamer notices and falls back to the full-mix capture automatically. Tolk announces <em>"[app] is not running; streaming the full system audio mix."</em> so you know the exclusion wasn't applied. The saved exclusion stays configured; it kicks in again the next time the app is running when you start streaming.</li>
+</ul>
+
+<h2>4. Streaming</h2>
+
+<p>Once settings are configured, streaming is a single button.</p>
+
+<ol>
+    <li>Play whatever audio you want to share through your PC's normal speakers / default output — music, a recording, a game, a conference, anything.</li>
+    <li>Click <strong>Start streaming</strong> (or press Enter when focus is on it — it is the window's default button).</li>
+    <li>TeamTalk Streamer runs the full flow in one step: attaches a loopback capture of your default output device, connects to your configured server, logs in, joins the channel, and begins sending the captured PCM into the channel. Every transition is announced by Tolk and marked with a feedback tone.</li>
+    <li>Click <strong>Stop streaming</strong> when you are done. The app stops capture, closes the stream, disconnects from the server, and detaches the source.</li>
+</ol>
+
+<p>The Start / Stop button is a toggle — it shows <em>"Start streaming"</em> when idle and <em>"Stop streaming"</em> while connecting, joined, or actively streaming. Pressing it during a transient state (e.g. during connection) will cancel the in-progress flow and return to idle.</p>
+
+<div class="note">
+    <strong>Tip.</strong> Nothing stops you from playing audio <em>after</em> pressing Start — the loopback captures whatever is playing on your default device at any moment. You can start streaming first, then start your music or game.
+</div>
+
+<h2>5. Keyboard Reference</h2>
+
+<table>
+    <tr><th>Key</th><th>Action</th></tr>
+    <tr><td>F1</td><td>Open this user guide in your default browser.</td></tr>
+    <tr><td>=  or numpad +</td><td>Increase feedback-tone volume by 10 %.</td></tr>
+    <tr><td>-  or numpad -</td><td>Decrease feedback-tone volume by 10 %.</td></tr>
+    <tr><td>Enter</td><td>Default action — Start / Stop streaming on the main window, Save on dialogs.</td></tr>
+    <tr><td>Escape</td><td>Cancel the current dialog (Server settings, Excluded apps).</td></tr>
+    <tr><td>Tab / Shift+Tab</td><td>Move focus between controls.</td></tr>
+    <tr><td>Arrow keys</td><td>Navigate lists (sources, channels, active sessions).</td></tr>
+    <tr><td>Spacebar</td><td>Activate the focused button.</td></tr>
+</table>
+
+<h2>6. The Advanced Sources List</h2>
+
+<p>Below the primary buttons is a small panel labelled <strong>Audio sources (advanced)</strong>. This shows every source currently attached to the router. Most users never need to interact with it — the Start streaming button attaches and detaches the loopback source automatically.</p>
+
+<p>The panel is there for power users who want to keep sources attached across start/stop cycles, or who want to manually add and remove sources for testing. In day-to-day use you can safely ignore it.</p>
+
+<h2>7. Accessibility Features</h2>
+
+<h3>Spoken feedback</h3>
+
+<p>TeamTalk Streamer uses the Tolk library to talk to your active screen reader (NVDA, JAWS, SAPI, etc.). Announcements fire on every meaningful state change:</p>
+
+<ul>
+    <li><em>"Connecting to TeamTalk."</em> when the TCP handshake starts.</li>
+    <li><em>"Logged in."</em> when authentication succeeds.</li>
+    <li><em>"Joined channel."</em> when the channel join completes.</li>
+    <li><em>"Streaming started."</em> when audio is flowing.</li>
+    <li><em>"Disconnected."</em> when the session ends cleanly.</li>
+    <li>An error message with the server's reason text if anything fails.</li>
+</ul>
+
+<h3>Audio feedback tones</h3>
+
+<p>Tones play alongside speech for non-verbal confirmation of common events:</p>
+
+<ul>
+    <li>Connect chime (rising two-note) when logged in.</li>
+    <li>Streaming-started fanfare (four ascending notes) when frames begin flowing.</li>
+    <li>Disconnect tone (falling two-note) on clean disconnect.</li>
+    <li>Error buzz (low two-note) on failure.</li>
+</ul>
+
+<h3>Pairing PINs and numeric codes</h3>
+
+<p>Any PIN or numeric code the app speaks (such as the mobile bridge pairing PIN in a future version) is spoken digit by digit — <em>"one two three four five six"</em> — rather than as a large number, matching how screen readers normally handle verification codes and OTPs.</p>
+
+<h2>8. Troubleshooting</h2>
+
+<h3>"Connecting to TeamTalk" but never finishes</h3>
+
+<p>Double-check the <strong>Host</strong> and <strong>TCP port</strong> fields. If your server uses a non-default port (anything other than 10333), both TCP and UDP fields must match what the server operator configured. Firewall software on the PC can also block outgoing connections to unusual ports.</p>
+
+<h3>"No server is configured. Please open Server settings and enter a host first."</h3>
+
+<p>This is spoken when Start streaming is pressed with an empty <strong>Host</strong> field. Open Server settings, fill in the host, and save.</p>
+
+<h3>"Channel path '/whatever' not found on server."</h3>
+
+<p>Either the channel doesn't exist, or the path is misspelled. Open Server settings and use <strong>Probe server for channel list</strong> to pick the channel from the live list instead of typing the path. Channel names are case-sensitive on most TeamTalk servers.</p>
+
+<h3>The app is silent when I expected spoken feedback</h3>
+
+<p>Tolk's native DLLs are optional add-ons — the app runs without them, but then has no way to speak. Download the Tolk DLLs from the <a href="https://github.com/dkager/tolk/releases">Tolk releases page</a> and place them alongside <code>TeamTalkStreamer.exe</code>. A screen reader (NVDA, JAWS, etc.) must also be running.</p>
+
+<h3>No feedback tones</h3>
+
+<p>The feedback tones need an OpenAL runtime. On most systems one is already installed; if not, install <a href="https://openal.org/downloads/">OpenAL Soft</a>. The app tolerates its absence and simply stays silent on that channel.</p>
+
+<h3>The app process stayed alive after I closed the window</h3>
+
+<p>This shouldn't happen in v1 — the shutdown path was hardened specifically against this — but if you ever see it, report the reproduction steps. The immediate workaround is to end the <code>TeamTalkStreamer.exe</code> process from Task Manager.</p>
+
+<h2>9. Where Your Settings Live</h2>
+
+<p>TeamTalk Streamer stores its configuration as plain JSON at:</p>
+
+<pre><code>%APPDATA%\TeamTalkStreamer\settings.json</code></pre>
+
+<p>You can open this file in any text editor to inspect or manually edit your credentials. The app uses an atomic write-then-rename pattern, so a power loss mid-save cannot corrupt the file. Passwords are stored in clear text at present; protect this file with OS-level permissions if that is a concern.</p>
+
+<h2>10. Roadmap</h2>
+
+<h3>Version 1 (current)</h3>
+
+<p>Windows streaming of the default playback device, credentials dialog with channel browser, one-click start/stop, clean shutdown. This is the fully-shipped feature set.</p>
+
+<h3>Version 2 (deferred)</h3>
+
+<p>Companion apps for iOS and Android so your phone can stream its audio to the same TeamTalk channel through your PC over the LAN. The server-side infrastructure is already written (mDNS discovery, WebSocket + Opus protocol, PIN-based HMAC pairing, device registry) and awaiting the client apps. Version 2 is paused until a macOS toolchain is available for building the iOS companion.</p>
+
+<h2>11. License Notes</h2>
+
+<p>The TeamTalk Streamer application source code is licensed under the terms of the <code>LICENSE</code> file in the repository.</p>
+
+<div class="warn">
+    <strong>The TeamTalk 5 SDK is proprietary.</strong> The bundled <code>TeamTalk5.dll</code> is copyright BearWare.dk and comes with a 30-day trial when first downloaded. Beyond that period, production use requires a License Key from <a href="https://bearware.dk/">BearWare</a>. TeamTalk Streamer only integrates with the SDK — the SDK's license is each user's responsibility.
+</div>
+
+<p>Tolk is MIT-licensed. NAudio is MIT-licensed. OpenAL Soft is LGPL-licensed. Concentus is BSD-licensed. The remaining dependencies are standard .NET runtime assemblies.</p>
+
+</body>
+</html>

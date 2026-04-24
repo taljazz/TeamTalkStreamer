@@ -1,0 +1,15 @@
+<!--
+  TeamTalkStreamer.Core
+  =====================
+  Pure abstractions: interfaces, base classes, enums, and value types
+  that define the source -> pipeline -> sink contract. No third-party
+  dependencies so every other project can build on top of this without
+  inheriting transitive NuGet weight.
+
+  Target framework, nullable, implicit usings come from Directory.Build.props.
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Nothing project-specific to declare: Core is BCL-only. -->
+
+</Project>

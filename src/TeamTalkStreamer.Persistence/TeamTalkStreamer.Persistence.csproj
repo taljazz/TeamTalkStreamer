@@ -1,0 +1,13 @@
+<!--
+  TeamTalkStreamer.Persistence
+  ============================
+  Settings and preset storage (JSON, under %APPDATA%\TeamTalkStreamer).
+  Uses System.Text.Json from the BCL so there are no package refs.
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\TeamTalkStreamer.Core\TeamTalkStreamer.Core.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,22 @@
+<!--
+  App.xaml
+  =========
+  Application-level XAML resource dictionary. We intentionally do NOT
+  set StartupUri here — the code-behind constructs the DI host first and
+  then resolves/shows the MainWindow, so XAML shouldn't create it for us.
+-->
+<Application x:Class="TeamTalkStreamer.App.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:TeamTalkStreamer.App"
+             ShutdownMode="OnMainWindowClose">
+    <Application.Resources>
+        <ResourceDictionary>
+            <!--
+              Global styles go here when we flesh out the visual design.
+              For now, defaulting to the system theme keeps every control
+              consistent with Windows accessibility (high-contrast, etc.).
+            -->
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

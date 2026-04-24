@@ -1,0 +1,20 @@
+<!--
+  TeamTalkStreamer.Audio.Windows
+  ==============================
+  Windows-specific audio capture. Currently just WASAPI loopback (system
+  audio) via NAudio. When the user adds future local sources (file
+  playback, etc.) they go here.
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\TeamTalkStreamer.Core\TeamTalkStreamer.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- NAudio wraps WASAPI (including loopback capture) with a managed API.
+         Pinned to 2.2.1 — the last 2.x release on .NET 10 at scaffold time. -->
+    <PackageReference Include="NAudio" Version="2.2.1" />
+  </ItemGroup>
+
+</Project>

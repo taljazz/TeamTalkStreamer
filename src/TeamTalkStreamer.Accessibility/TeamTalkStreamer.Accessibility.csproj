@@ -1,0 +1,27 @@
+<!--
+  TeamTalkStreamer.Accessibility
+  ==============================
+  Screen-reader output (Tolk, backed by NVDA / JAWS / SAPI) and non-verbal
+  audio feedback tones via OpenAL (OpenTK bindings). Reuses the same
+  pattern as Aircraft Explorer and CSharp Academy.
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\TeamTalkStreamer.Core\TeamTalkStreamer.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- OpenTK gives us managed OpenAL bindings for the feedback tones. -->
+    <PackageReference Include="OpenTK" Version="4.8.2" />
+  </ItemGroup>
+
+  <!--
+    Tolk native DLLs (Tolk.dll, TolkDotNet.dll, nvdaControllerClient64.dll,
+    SAAPI64.dll, OpenAL32.dll) need to be dropped into
+    <solutionRoot>/libs/tolk/ and copied to the App's output folder.
+    That copy is wired in the App project, not here — keeps this class
+    library platform-neutral-ish.
+  -->
+
+</Project>

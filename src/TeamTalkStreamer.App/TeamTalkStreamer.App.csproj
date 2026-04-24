@@ -1,0 +1,50 @@
+<!--
+  TeamTalkStreamer.App
+  ====================
+  The WPF entry point. Hosts DI, the mode stack, and all XAML windows.
+  References every other project so the App can compose the full graph.
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- WPF-specific settings must live in the csproj (not props) because
+         they alter the SDK import graph. -->
+    <OutputType>WinExe</OutputType>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>TeamTalkStreamer.App</RootNamespace>
+    <AssemblyName>TeamTalkStreamer</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TeamTalkStreamer.Core\TeamTalkStreamer.Core.csproj" />
+    <ProjectReference Include="..\TeamTalkStreamer.Audio.Windows\TeamTalkStreamer.Audio.Windows.csproj" />
+    <ProjectReference Include="..\TeamTalkStreamer.TeamTalk\TeamTalkStreamer.TeamTalk.csproj" />
+    <ProjectReference Include="..\TeamTalkStreamer.Accessibility\TeamTalkStreamer.Accessibility.csproj" />
+    <ProjectReference Include="..\TeamTalkStreamer.Persistence\TeamTalkStreamer.Persistence.csproj" />
+
+    <!-- MobileBridge reference temporarily removed while the iOS
+         companion toolchain is unavailable. The project still builds
+         as part of the solution and all code is intact — restore this
+         reference when the iOS companion app is ready. -->
+    <!-- <ProjectReference Include="..\TeamTalkStreamer.MobileBridge\TeamTalkStreamer.MobileBridge.csproj" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Hosting + DI + config. Pinned to 10.0.0 GA releases. -->
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Ship the user guide next to the exe so F1 can open it and
+         package.bat can zip it with the published build. The file
+         lives at the solution root, not the project root, hence the
+         two-level relative path. -->
+    <None Include="..\..\guide.html" Link="guide.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
